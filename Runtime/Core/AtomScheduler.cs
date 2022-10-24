@@ -11,7 +11,7 @@ namespace UniMob.Core
     public class AtomScheduler : MonoBehaviour
     {
         public static Stopwatch SyncTimer = new Stopwatch();
-    
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private static readonly CustomSampler ProfilerSampler = CustomSampler.Create("UniMob.Sync");
 #endif
@@ -52,7 +52,7 @@ namespace UniMob.Core
             ProfilerSampler.Begin();
 #endif
             SyncTimer.Restart();
-            
+
             var toSwap = _updatingCurrentFrame;
             _updatingCurrentFrame = _updatingNextFrame;
             _updatingNextFrame = toSwap;
@@ -72,6 +72,14 @@ namespace UniMob.Core
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             ProfilerSampler.End();
 #endif
+        }
+
+        private void OnDestroy()
+        {
+            if (ReferenceEquals(_current, this))
+            {
+                _current = null;
+            }
         }
     }
 }
